@@ -201,14 +201,14 @@ class Piwik_Goals_API
      * Returns a datatable of Items SKU/name or categories and their metrics
      * If $abandonedCarts set to 1, will return items abandoned in carts. If set to 0, will return items ordered
      */
-    protected function getItems($recordName, $idSite, $period, $date, $abandonedCarts)
+    protected function getItems($recordName, $idSite, $period, $date, $segment, $abandonedCarts)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $recordNameFinal = $recordName;
         if ($abandonedCarts) {
             $recordNameFinal = Piwik_Goals::getItemRecordNameAbandonedCart($recordName);
         }
-        $archive = Piwik_Archive::build($idSite, $period, $date);
+        $archive = Piwik_Archive::build($idSite, $period, $date, $segment);
         $dataTable = $archive->getDataTable($recordNameFinal);
         $dataTable->filter('Sort', array(Piwik_Archive::INDEX_ECOMMERCE_ITEM_REVENUE));
         $dataTable->queueFilter('ReplaceColumnNames');
@@ -317,19 +317,19 @@ class Piwik_Goals_API
         $dataTable->addDataTable($ecommerceViews);
     }
 
-    public function getItemsSku($idSite, $period, $date, $abandonedCarts = false)
+    public function getItemsSku($idSite, $period, $date, $segment = false, $abandonedCarts = false)
     {
-        return $this->getItems('Goals_ItemsSku', $idSite, $period, $date, $abandonedCarts);
+        return $this->getItems('Goals_ItemsSku', $idSite, $period, $date, $segment, $abandonedCarts);
     }
 
-    public function getItemsName($idSite, $period, $date, $abandonedCarts = false)
+    public function getItemsName($idSite, $period, $date, $segment = false, $abandonedCarts = false)
     {
-        return $this->getItems('Goals_ItemsName', $idSite, $period, $date, $abandonedCarts);
+        return $this->getItems('Goals_ItemsName', $idSite, $period, $date, $segment, $abandonedCarts);
     }
 
-    public function getItemsCategory($idSite, $period, $date, $abandonedCarts = false)
+    public function getItemsCategory($idSite, $period, $date, $segment = false, $abandonedCarts = false)
     {
-        return $this->getItems('Goals_ItemsCategory', $idSite, $period, $date, $abandonedCarts);
+        return $this->getItems('Goals_ItemsCategory', $idSite, $period, $date, $segment, $abandonedCarts);
     }
 
     /**
